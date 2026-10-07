@@ -1,6 +1,8 @@
 "use client";
 
+import axios from "axios";
 import { useState } from "react";
+import { useConnection } from "wagmi";
 
 type RiskLevel = "LOW" | "MEDIUM" | "HIGH";
 
@@ -10,21 +12,36 @@ interface UserFormProps {
 
 const UserForm = ({ onSubmit }: UserFormProps) => {
   const [risk, setRisk] = useState<RiskLevel>("MEDIUM");
+  const { address, isConnected } = useConnection();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!isConnected || !address) {
+      console.error("Wallet not connected");
+      return;
+    }
 
     const form = new FormData(e.currentTarget);
 
     const userData = {
+      address: address,
       name: form.get("name") as string,
       email: form.get("email") as string,
       riskPreference: risk,
     };
 
-    console.log(userData);
+    try {
+      const { data } = await axios.post(
+        "http://localhost:8000/api/users/register",
+        userData,
+      );
+      console.log("User registered:", data);
 
-    onSubmit();
+      onSubmit();
+    } catch (error) {
+      console.log("Registration failed:", error);
+    }
   };
 
   return (
