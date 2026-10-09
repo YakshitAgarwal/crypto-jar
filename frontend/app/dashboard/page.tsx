@@ -4,9 +4,13 @@ import { useState, useEffect } from "react";
 import { useConnection } from "wagmi";
 import UserForm from "../components/UserForm";
 import axios from "axios";
+import Menubar from "../components/Menubar";
+import Searchbar from "../components/Searchbar";
+import Dashboard from "../components/Dashboard";
 
-const Dashboard = () => {
+const DashboardPage = () => {
   const [showForm, setShowForm] = useState(false);
+  const [name, setName] = useState("");
 
   const { address, isConnected } = useConnection();
 
@@ -25,6 +29,7 @@ const Dashboard = () => {
 
         if (data.exists) {
           setShowForm(false);
+          setName(data.name);
         } else {
           setShowForm(true);
         }
@@ -42,27 +47,22 @@ const Dashboard = () => {
 
   return (
     <div className="relative min-h-screen bg-white text-black">
-      <div className={showForm ? "blur-sm" : ""}>
-        <div className="p-10">
-          <h1 className="text-4xl font-semibold">Dashboard</h1>
-
-          <div className="mt-10 grid grid-cols-3 gap-6">
-            <div className="rounded-2xl border p-6">
-              <p className="text-sm text-gray-500">$1 Jar</p>
-              <h2 className="mt-2 text-2xl font-semibold">$0.00</h2>
-            </div>
-
-            <div className="rounded-2xl border p-6">
-              <p className="text-sm text-gray-500">$5 Jar</p>
-              <h2 className="mt-2 text-2xl font-semibold">$0.00</h2>
-            </div>
-
-            <div className="rounded-2xl border p-6">
-              <p className="text-sm text-gray-500">$10 Jar</p>
-              <h2 className="mt-2 text-2xl font-semibold">$0.00</h2>
-            </div>
+      <div
+        className={`flex min-h-screen gap-4 p-6 ${showForm ? "blur-sm" : ""}`}
+      >
+        <aside className="w-72 shrink-0 self-stretch">
+          <Menubar />
+        </aside>
+        <main className="flex min-w-0 flex-1 flex-col gap-4">
+          <div className="w-full min-w-0">
+            <Searchbar name={name} />
           </div>
-        </div>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-3xl font-semibold">
+              <Dashboard />
+            </h1>
+          </div>
+        </main>
       </div>
 
       {showForm && (
@@ -80,4 +80,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;

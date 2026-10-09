@@ -59,6 +59,7 @@ const returningUser = async (req, res) => {
       return res.status(200).json({
         exists: true,
         message: "Welcome back",
+        name: userExists.name,
       });
     }
 

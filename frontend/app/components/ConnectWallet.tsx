@@ -44,11 +44,6 @@ const ConnectWallet = ({ text, className }: ConnectWalletProps) => {
 
   return (
     <button onClick={connectWallet} disabled={loading} className={className}>
-      {/* {loading
-        ? "Connecting..."
-        : address
-          ? `${address.slice(0, 6)}...${address.slice(-4)}`
-          : text} */}
       {text}
     </button>
   );
