@@ -7,10 +7,16 @@ import axios from "axios";
 import Menubar from "../components/Menubar";
 import Searchbar from "../components/Searchbar";
 import Dashboard from "../components/Dashboard";
+import Jars from "../components/Jars";
+import Transactions from "../components/Transactions";
+import Invest from "../components/Invest";
+import Settings from "../components/Settings";
+import Help from "../components/Help";
 
 const DashboardPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
+  const [tab, setTab] = useState("Dashboard");
 
   const { address, isConnected } = useConnection();
 
@@ -50,17 +56,20 @@ const DashboardPage = () => {
       <div
         className={`flex min-h-screen gap-4 p-6 ${showForm ? "blur-sm" : ""}`}
       >
-        <aside className="w-72 shrink-0 self-stretch">
-          <Menubar />
+        <aside className="w-80 shrink-0 self-stretch">
+          <Menubar tab={tab} setTab={setTab} />
         </aside>
         <main className="flex min-w-0 flex-1 flex-col gap-4">
           <div className="w-full min-w-0">
             <Searchbar name={name} />
           </div>
           <div className="min-w-0 flex-1">
-            <h1 className="text-3xl font-semibold">
-              <Dashboard />
-            </h1>
+            {tab == "Dashboard" && <Dashboard />}
+            {tab == "Jars" && <Jars />}
+            {tab == "Transactions" && <Transactions />}
+            {tab == "Invest" && <Invest />}
+            {tab == "Settings" && <Settings />}
+            {tab == "Help" && <Help />}
           </div>
         </main>
       </div>

@@ -9,7 +9,12 @@ import {
 } from "lucide-react";
 import Menu from "./Menu";
 
-const Menubar = () => {
+interface MenubarProps {
+  tab: string;
+  setTab: (tab: string) => void;
+}
+
+const Menubar = ({ tab, setTab }: MenubarProps) => {
   return (
     <div className="bg-[#f7f7f7] p-6 rounded-2xl h-full w-full flex flex-col gap-16">
       <div className="text-[32px] font-semibold">CryptoJar</div>
@@ -22,6 +27,8 @@ const Menubar = () => {
             { name: "Transactions", icon: <CreditCardCheck /> },
             { name: "Invest", icon: <BadgeDollarSign /> },
           ]}
+          tab={tab}
+          setTab={setTab}
         />
       </div>
       <div>
@@ -32,6 +39,8 @@ const Menubar = () => {
             { name: "Help", icon: <LifeBuoy /> },
             { name: "Logout", icon: <LogOut /> },
           ]}
+          tab={tab}
+          setTab={setTab}
         />
       </div>
     </div>
