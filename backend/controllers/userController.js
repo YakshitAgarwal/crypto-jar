@@ -18,8 +18,10 @@ const registerUser = async (req, res) => {
       });
     }
 
+    const normalizedAddress = address.toLowerCase();
+
     const user = await User.create({
-      address,
+      address: normalizedAddress,
       name,
       email,
       riskPreference,

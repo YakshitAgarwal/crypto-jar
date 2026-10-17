@@ -2,6 +2,20 @@ const mongoose = require("mongoose");
 
 const transactionSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
+
+    eventId: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
+
     // User who made the original payment
     walletAddress: {
       type: String,

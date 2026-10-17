@@ -61,7 +61,7 @@ const DashboardPage = () => {
         </aside>
         <main className="flex min-w-0 flex-1 flex-col gap-4">
           <div className="w-full min-w-0">
-            <Searchbar name={name} />
+            <Searchbar />
           </div>
           <div className="min-w-0 flex-1">
             {tab == "Dashboard" && <Dashboard />}

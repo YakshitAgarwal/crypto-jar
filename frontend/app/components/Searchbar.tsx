@@ -1,19 +1,65 @@
+"use client";
+
 import { Search } from "lucide-react";
 import { useConnection } from "wagmi";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-interface SearchbarProps {
-  name: string;
-}
+const Searchbar = () => {
+  const { address, isConnected } = useConnection();
 
-const Searchbar = ({ name }: SearchbarProps) => {
-  const { address } = useConnection();
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!isConnected || !address) {
+      setName("");
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchUser = async () => {
+      setLoading(true);
+
+      try {
+        const response = await axios.get("http://localhost:8000/api/users", {
+          params: { address: address.toLowerCase() },
+        });
+
+        if (cancelled) return;
+
+        if (response.data.exists) {
+          setName(response.data.name || "");
+        } else {
+          setName("");
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setName("");
+        }
+
+        console.error("Error fetching user:", error);
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    void fetchUser();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [address, isConnected]);
 
   const trimmedAddress = address
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
     : "Not connected";
 
   return (
-    <div className="flex items-center justify-between rounded-2xl bg-[#f7f7f7] py-5 px-8">
+    <div className="flex items-center justify-between rounded-2xl bg-[#f7f7f7] px-8 py-5">
       <div className="relative w-full max-w-md">
         <Search
           size={28}
@@ -23,15 +69,18 @@ const Searchbar = ({ name }: SearchbarProps) => {
         <input
           type="text"
           placeholder="Search"
-          className="w-full rounded-4xl bg-white py-4 pl-14 pr-4 outline-none text-[20px]"
+          className="w-full rounded-4xl bg-white py-4 pl-14 pr-4 text-[20px] outline-none"
         />
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="bg-gray-500 p-7 rounded-full"></div>
+        <div className="rounded-full bg-gray-500 p-7" />
 
         <div className="flex flex-col">
-          <div className="text-[22px] font-semibold">{name}</div>
+          <div className="text-[22px] font-semibold">
+            {loading ? "Loading..." : name}
+          </div>
+
           <div className="text-[18px] text-gray-500">{trimmedAddress}</div>
         </div>
       </div>
