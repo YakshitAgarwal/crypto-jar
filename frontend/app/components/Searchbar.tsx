@@ -10,12 +10,15 @@ const Searchbar = () => {
 
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (!isConnected || !address) {
       setName("");
       return;
     }
+
+    setMounted(true);
 
     let cancelled = false;
 
@@ -54,9 +57,7 @@ const Searchbar = () => {
     };
   }, [address, isConnected]);
 
-  const trimmedAddress = address
-    ? `${address.slice(0, 6)}...${address.slice(-4)}`
-    : "Not connected";
+  const connected = mounted && isConnected && !!address;
 
   return (
     <div className="flex items-center justify-between rounded-2xl bg-[#f7f7f7] px-8 py-5">
@@ -81,7 +82,15 @@ const Searchbar = () => {
             {loading ? "Loading..." : name}
           </div>
 
-          <div className="text-[18px] text-gray-500">{trimmedAddress}</div>
+          <div className="text-[18px] text-gray-500">
+            {connected ? (
+              <div>
+                {address!.slice(0, 6)}...{address!.slice(-4)}
+              </div>
+            ) : (
+              <div>{mounted ? "Not connected" : "Loading wallet..."}</div>
+            )}
+          </div>
         </div>
       </div>
     </div>

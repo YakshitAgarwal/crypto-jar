@@ -1,9 +1,15 @@
 const express = require("express");
 const cors = require("cors");
+const http = require("http");
+
 const connectDB = require("./config/db");
+const { initializeSocket } = require("./config/socket");
+
 const { startTransactionMonitor } = require("./services/transactionMonitor");
 
 const app = express();
+const server = http.createServer(app);
+
 const PORT = 8000;
 
 app.use(
@@ -20,9 +26,11 @@ async function startServer() {
   try {
     await connectDB();
 
+    initializeSocket(server);
+
     startTransactionMonitor();
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server running on PORT: ${PORT}`);
     });
   } catch (error) {

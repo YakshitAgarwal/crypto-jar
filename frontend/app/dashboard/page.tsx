@@ -12,10 +12,10 @@ import Transactions from "../components/Transactions";
 import Invest from "../components/Invest";
 import Settings from "../components/Settings";
 import Help from "../components/Help";
+import RoundupListener from "../components/RoundupListener";
 
 const DashboardPage = () => {
   const [showForm, setShowForm] = useState(false);
-  const [name, setName] = useState("");
   const [tab, setTab] = useState("Dashboard");
 
   const { address, isConnected } = useConnection();
@@ -29,13 +29,12 @@ const DashboardPage = () => {
       try {
         const { data } = await axios.get("http://localhost:8000/api/users", {
           params: {
-            address,
+            address: address?.toLowerCase(),
           },
         });
 
         if (data.exists) {
           setShowForm(false);
-          setName(data.name);
         } else {
           setShowForm(true);
         }
@@ -44,7 +43,27 @@ const DashboardPage = () => {
       }
     };
 
+    const getPendingRoundupTransaction = async () => {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:8000/api/transactions/pending",
+          {
+            params: {
+              address: address?.toLowerCase(),
+            },
+          },
+        );
+
+        if (data.exists) {
+          console.log(data.transaction);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     checkUser();
+    getPendingRoundupTransaction();
   }, [address, isConnected]);
 
   const handleFormSubmit = () => {
@@ -53,6 +72,7 @@ const DashboardPage = () => {
 
   return (
     <div className="relative min-h-screen bg-white text-black">
+      <RoundupListener />
       <div
         className={`flex min-h-screen gap-4 p-6 ${showForm ? "blur-sm" : ""}`}
       >

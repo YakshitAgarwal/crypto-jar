@@ -6,6 +6,8 @@ const {
   getAddress,
 } = require("viem");
 
+const { getIO } = require("../config/socket");
+
 const { baseSepolia } = require("viem/chains");
 
 const User = require("../models/User");
@@ -128,6 +130,17 @@ async function handleTransfer(log) {
       status: transaction.roundupStatus,
       txHash: transaction.txHash,
     });
+
+    if (roundup > 0n) {
+      getIO().to(`wallet:${sender}`).emit("roundup:pending", {
+        transactionId: transaction._id.toString(),
+        txHash: transaction.txHash,
+        txAmount: transaction.txAmount,
+        roundupAmount: transaction.roundupAmount,
+        vaultType: transaction.vaultType,
+        chainId: transaction.chainId,
+      });
+    }
   } catch (error) {
     console.error("Error processing USDC transfer:", error);
   }
