@@ -3,17 +3,9 @@
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { useConnection } from "wagmi";
+import { Roundup } from "../types/roundup";
 
-export function useRoundupSocket(
-  onRoundup: (roundup: {
-    transactionId: string;
-    txHash: string;
-    txAmount: number;
-    roundupAmount: number;
-    vaultType: string;
-    chainId: number;
-  }) => void,
-) {
+export function useRoundupSocket(onRoundup: (roundup: Roundup) => void) {
   const { address, isConnected } = useConnection();
 
   useEffect(() => {

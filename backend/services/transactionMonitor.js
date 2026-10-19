@@ -19,8 +19,6 @@ if (!process.env.RPC_URL || !USDC_ADDRESS) {
   throw new Error("RPC_URL and USDC_ADDRESS must be configured");
 }
 
-const usdcAddress = getAddress(USDC_ADDRESS);
-
 const publicClient = createPublicClient({
   chain: baseSepolia,
   transport: http(process.env.RPC_URL),
@@ -112,7 +110,6 @@ async function handleTransfer(log) {
       eventId,
       walletAddress: sender,
       txHash: log.transactionHash,
-      recipientAddress: recipient,
       txAmount: Number(formatUnits(value, 6)),
       roundupAmount: Number(formatUnits(roundup, 6)),
       roundupPlan: plan,
@@ -147,10 +144,10 @@ async function handleTransfer(log) {
 }
 
 function startTransactionMonitor() {
-  console.log("Monitoring Base Sepolia USDC:", usdcAddress);
+  console.log("Monitoring Base Sepolia USDC:", USDC_ADDRESS);
 
   return publicClient.watchContractEvent({
-    address: usdcAddress,
+    address: USDC_ADDRESS,
     abi: usdcAbi,
     eventName: "Transfer",
     pollingInterval: 4_000,

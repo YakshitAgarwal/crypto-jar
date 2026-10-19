@@ -5,6 +5,7 @@ const {
 } = require("../controllers/userController");
 const {
   pendingRoundupTransactions,
+  completeRoundupTransactions,
 } = require("../controllers/transactionController");
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.route("/users").get(returningUser);
 router.route("/users/register").post(registerUser);
 
 router.route("/transactions/pending").get(pendingRoundupTransactions);
+router.route("/transactions/complete").post(completeRoundupTransactions);
 
 module.exports = router;

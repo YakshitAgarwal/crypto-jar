@@ -39,13 +39,6 @@ const transactionSchema = new mongoose.Schema(
       trim: true,
     },
 
-    // Merchant or recipient wallet
-    recipientAddress: {
-      type: String,
-      lowercase: true,
-      default: null,
-    },
-
     // Original payment amount
     txAmount: {
       type: Number,
@@ -88,7 +81,7 @@ const transactionSchema = new mongoose.Schema(
     // State of the separate savings transaction
     roundupStatus: {
       type: String,
-      enum: ["PENDING", "SAVED", "SKIPPED", "FAILED"],
+      enum: ["PENDING", "COMPLETED", "SKIPPED", "FAILED"],
       default: "PENDING",
     },
 
