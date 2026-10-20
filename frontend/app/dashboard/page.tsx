@@ -12,6 +12,7 @@ import Transactions from "../components/Transactions";
 import Invest from "../components/Invest";
 import Settings from "../components/Settings";
 import Help from "../components/Help";
+import Logout from "../components/Logout";
 import RoundupListener from "../components/RoundupListener";
 
 const DashboardPage = () => {
@@ -90,6 +91,7 @@ const DashboardPage = () => {
             {tab == "Invest" && <Invest />}
             {tab == "Settings" && <Settings />}
             {tab == "Help" && <Help />}
+            {tab == "Logout" && <Logout />}
           </div>
         </main>
       </div>

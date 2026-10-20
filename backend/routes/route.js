@@ -2,6 +2,7 @@ const express = require("express");
 const {
   registerUser,
   returningUser,
+  getUserDetails,
 } = require("../controllers/userController");
 const {
   pendingRoundupTransactions,
@@ -15,6 +16,13 @@ router.get("/health", (req, res) => {
 
 router.route("/users").get(returningUser);
 router.route("/users/register").post(registerUser);
+router.route("/users/details").get(getUserDetails);
+router.get("/users/details-test", (req, res) => {
+  return res.json({
+    message: "User details route works",
+    address: req.query.address,
+  });
+});
 
 router.route("/transactions/pending").get(pendingRoundupTransactions);
 router.route("/transactions/complete").post(completeRoundupTransactions);

@@ -42,10 +42,13 @@ const pendingRoundupTransactions = async (req, res) => {
       });
     }
 
+    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000);
+
     const transaction = await Transaction.findOne({
       walletAddress: address.toLowerCase(),
       paymentStatus: "CONFIRMED",
       roundupStatus: "PENDING",
+      createdAt: { $gte: twoMinutesAgo },
     }).sort({ createdAt: -1 });
 
     if (!transaction) {
