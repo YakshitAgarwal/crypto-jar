@@ -1,5 +1,6 @@
 import {
   BadgeDollarSign,
+  BanknoteArrowDown,
   CreditCardCheck,
   LayoutDashboard,
   LifeBuoy,
@@ -26,6 +27,7 @@ const Menubar = ({ tab, setTab }: MenubarProps) => {
             { name: "Jars", icon: <PillBottle /> },
             { name: "Transactions", icon: <CreditCardCheck /> },
             { name: "Invest", icon: <BadgeDollarSign /> },
+            { name: "Withdraw", icon: <BanknoteArrowDown /> },
           ]}
           tab={tab}
           setTab={setTab}

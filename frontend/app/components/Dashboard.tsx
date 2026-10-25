@@ -3,6 +3,9 @@ import { useConnection } from "wagmi";
 import Card from "./Card";
 import axios from "axios";
 import SavingsCard from "./SavingsCard";
+import YourJarCard from "./YourJarCard";
+import JarAllocationCard from "./JarAllocationCard";
+import RecentTxnsCard from "./RecentTxnsCard";
 
 interface DashboardStats {
   preferredJar: string;
@@ -95,9 +98,9 @@ const Dashboard = () => {
     jarDescriptions[stats.preferredJar] ?? "Your savings strategy";
 
   return (
-    <div className="bg-[#f7f7f7] rounded-2xl p-6 flex flex-col gap-8">
+    <div className="bg-[#f7f7f7] rounded-2xl p-6 flex flex-col gap-4">
       <div className="text-[42px] font-semibold">Dashboard</div>
-      <div className="grid grid-cols-4 gap-6">
+      <div className="grid grid-cols-4 gap-4">
         <Card
           title="Preferred Jar"
           stat={loading ? "..." : preferredJar}
@@ -119,18 +122,24 @@ const Dashboard = () => {
           info="Successfully completed"
         />
       </div>
-      <div className="flex justify-between items-center">
-        <div className="flex flex-col">
-          <div className="flex">
+      <div className="flex justify-between items-center gap-4">
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between items-center gap-4">
             <SavingsCard />
             <div className="bg-white rounded-2xl p-6">?</div>
           </div>
-          <div className="flex">
-            <div className="bg-white rounded-2xl p-6">Recent Transactions</div>
-            <div className="bg-white rounded-2xl p-6">Jar Allocation</div>
+          <div className="flex justify-between items-center gap-4">
+            <div>
+              <RecentTxnsCard />
+            </div>
+            <div>
+              <JarAllocationCard />
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-2xl p-6">Your Jar</div>
+        <div>
+          <YourJarCard />
+        </div>
       </div>
     </div>
   );

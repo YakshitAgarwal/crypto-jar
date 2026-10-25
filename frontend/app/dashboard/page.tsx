@@ -22,6 +22,9 @@ const DashboardPage = () => {
   const { address, isConnected } = useConnection();
 
   useEffect(() => {
+    const savedTab = localStorage.getItem("tab");
+    if (savedTab) setTab(savedTab);
+
     const checkUser = async () => {
       if (!address || !isConnected) {
         return;
