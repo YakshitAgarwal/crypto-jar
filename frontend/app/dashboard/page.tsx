@@ -6,13 +6,13 @@ import UserForm from "../components/UserForm";
 import axios from "axios";
 import Menubar from "../components/Menubar";
 import Searchbar from "../components/Searchbar";
-import Dashboard from "../components/Dashboard";
-import Jars from "../components/Jars";
-import Transactions from "../components/Transactions";
-import Invest from "../components/Invest";
-import Settings from "../components/Settings";
-import Help from "../components/Help";
-import Logout from "../components/Logout";
+import Dashboard from "../components/Menu/Dashboard";
+import Jars from "../components/Menu/Jars";
+import Transactions from "../components/Menu/Transactions";
+import Invest from "../components/Menu/Invest";
+import Settings from "../components/Menu/Settings";
+import Help from "../components/Menu/Help";
+import Logout from "../components/Menu/Logout";
 import RoundupListener from "../components/RoundupListener";
 
 const DashboardPage = () => {
@@ -78,7 +78,7 @@ const DashboardPage = () => {
     <div className="relative min-h-screen bg-white text-black">
       <RoundupListener />
       <div
-        className={`flex min-h-screen gap-4 p-6 ${showForm ? "blur-sm" : ""}`}
+        className={`flex min-h-screen gap-4 p-4 ${showForm ? "blur-sm" : ""}`}
       >
         <aside className="w-80 shrink-0 self-stretch">
           <Menubar tab={tab} setTab={setTab} />

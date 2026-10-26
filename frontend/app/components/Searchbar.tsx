@@ -60,29 +60,29 @@ const Searchbar = () => {
   const connected = mounted && isConnected && !!address;
 
   return (
-    <div className="flex items-center justify-between rounded-2xl bg-[#f7f7f7] px-8 py-5">
+    <div className="flex items-center justify-between rounded-2xl bg-[#f7f7f7] px-8 py-3">
       <div className="relative w-full max-w-md">
         <Search
-          size={28}
+          size={24}
           className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
         />
 
         <input
           type="text"
           placeholder="Search"
-          className="w-full rounded-4xl bg-white py-4 pl-14 pr-4 text-[20px] outline-none"
+          className="w-full rounded-4xl bg-white py-2 pl-14 pr-4 text-[18px] outline-none"
         />
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="rounded-full bg-gray-500 p-7" />
+        <div className="rounded-full bg-gray-500 p-6" />
 
         <div className="flex flex-col">
-          <div className="text-[22px] font-semibold">
+          <div className="text-[20px] font-semibold">
             {loading ? "Loading..." : name}
           </div>
 
-          <div className="text-[18px] text-gray-500">
+          <div className="text-[16px] text-gray-500">
             {connected ? (
               <div>
                 {address!.slice(0, 6)}...{address!.slice(-4)}

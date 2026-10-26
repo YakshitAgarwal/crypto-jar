@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useConnection } from "wagmi";
-import Card from "./Card";
+import Card from "../Dashboard/Card";
 import axios from "axios";
-import SavingsCard from "./SavingsCard";
-import YourJarCard from "./YourJarCard";
-import JarAllocationCard from "./JarAllocationCard";
-import RecentTxnsCard from "./RecentTxnsCard";
+import SavingsCard from "../Dashboard/SavingsCard";
+import YourJarCard from "../Dashboard/YourJarCard";
+import JarAllocationCard from "../Dashboard/JarAllocationCard";
+import RecentTxnsCard from "../Dashboard/RecentTxnsCard";
 
 interface DashboardStats {
   preferredJar: string;
