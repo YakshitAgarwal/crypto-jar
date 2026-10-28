@@ -8,6 +8,8 @@ const {
   getAddress,
 } = require("viem");
 const { baseSepolia } = require("viem/chains");
+const { isAddress } = require("viem");
+const { fetchWalletHistory } = require("../services/transactionHistory");
 
 const Transaction = require("../models/Transaction");
 
@@ -269,7 +271,36 @@ const completeRoundupTransactions = async (req, res) => {
   }
 };
 
+const getWalletHistory = async (req, res) => {
+  try {
+    const { address } = req.query;
+
+    if (!address || !isAddress(address)) {
+      return res.status(400).json({
+        message: "A valid wallet address is required",
+      });
+    }
+
+    const history = await fetchWalletHistory(address);
+
+    return res.status(200).json({
+      message: "Wallet history fetched successfully",
+      data: history,
+    });
+  } catch (error) {
+    console.error(
+      "Wallet history error:",
+      error.response?.data || error.message,
+    );
+
+    return res.status(500).json({
+      message: "Unable to fetch wallet history",
+    });
+  }
+};
+
 module.exports = {
   pendingRoundupTransactions,
   completeRoundupTransactions,
+  getWalletHistory,
 };

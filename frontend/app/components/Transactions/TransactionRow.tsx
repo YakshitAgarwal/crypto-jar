@@ -2,11 +2,13 @@ import { ArrowDownLeft, ArrowUpRight, ExternalLink } from "lucide-react";
 
 type TransactionType = "VAULT_DEPOSIT" | "PAYMENT" | "TRANSFER";
 type TransactionStatus = "COMPLETED" | "PENDING" | "FAILED";
+type TransactionDirection = "IN" | "OUT";
 
 interface Transaction {
   id: string;
   hash: string;
   type: TransactionType;
+  direction: TransactionDirection;
   amount: number;
   token: string;
   status: TransactionStatus;
@@ -20,9 +22,10 @@ const explorerUrl = (hash: string) => `https://sepolia.basescan.org/tx/${hash}`;
 
 const TransactionRow = ({ tx }: { tx: Transaction }) => {
   const isVault = tx.type === "VAULT_DEPOSIT";
+  const isIncoming = tx.direction === "IN";
 
   const title = isVault
-    ? `${tx.jar ?? ""} Jar deposit`.trim()
+    ? `${tx.jar ? `${tx.jar} ` : ""}Jar deposit`
     : tx.type === "PAYMENT"
       ? "Wallet payment"
       : "Wallet transfer";
@@ -43,12 +46,16 @@ const TransactionRow = ({ tx }: { tx: Transaction }) => {
       <div className="flex min-w-0 items-center gap-2.5">
         <div
           className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
-            isVault
+            isIncoming
               ? "bg-emerald-50 text-emerald-700"
               : "bg-gray-100 text-gray-600"
           }`}
         >
-          {isVault ? <ArrowDownLeft size={18} /> : <ArrowUpRight size={18} />}
+          {isIncoming ? (
+            <ArrowDownLeft size={18} />
+          ) : (
+            <ArrowUpRight size={18} />
+          )}
         </div>
 
         <div className="min-w-0">
@@ -62,7 +69,7 @@ const TransactionRow = ({ tx }: { tx: Transaction }) => {
       <div className="flex shrink-0 items-center gap-2 sm:gap-3">
         <div className="text-right">
           <p className="text-xs font-semibold tabular-nums xl:text-sm">
-            {isVault ? "+" : "−"}${tx.amount.toFixed(2)}
+            {isIncoming ? "+" : "−"}${tx.amount.toFixed(2)}
           </p>
           <p className="mt-0.5 text-[10px] text-gray-500">{tx.token}</p>
         </div>
@@ -73,16 +80,18 @@ const TransactionRow = ({ tx }: { tx: Transaction }) => {
           {tx.status.charAt(0) + tx.status.slice(1).toLowerCase()}
         </span>
 
-        <a
-          href={explorerUrl(tx.hash)}
-          target="_blank"
-          rel="noopener noreferrer"
-          title="View on Base Sepolia Explorer"
-          aria-label={`View ${title} on Base Sepolia Explorer`}
-          className="rounded-lg p-1.5 text-gray-500 transition hover:bg-gray-100 hover:text-black"
-        >
-          <ExternalLink size={15} />
-        </a>
+        {tx.hash && (
+          <a
+            href={explorerUrl(tx.hash)}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="View on Base Sepolia Explorer"
+            aria-label={`View ${title} on Base Sepolia Explorer`}
+            className="rounded-lg p-1.5 text-gray-500 transition hover:bg-gray-100 hover:text-black"
+          >
+            <ExternalLink size={15} />
+          </a>
+        )}
       </div>
     </div>
   );

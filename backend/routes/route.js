@@ -7,6 +7,7 @@ const {
 const {
   pendingRoundupTransactions,
   completeRoundupTransactions,
+  getWalletHistory,
 } = require("../controllers/transactionController");
 const router = express.Router();
 
@@ -26,5 +27,6 @@ router.get("/users/details-test", (req, res) => {
 
 router.route("/transactions/pending").get(pendingRoundupTransactions);
 router.route("/transactions/complete").post(completeRoundupTransactions);
+router.route("/transactions/history").get(getWalletHistory);
 
 module.exports = router;
