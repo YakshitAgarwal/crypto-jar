@@ -98,8 +98,8 @@ const Dashboard = () => {
     jarDescriptions[stats.preferredJar] ?? "Your savings strategy";
 
   return (
-    <div className="bg-[#f7f7f7] rounded-2xl p-6 flex flex-col gap-4">
-      <div className="text-[42px] font-semibold">Dashboard</div>
+    <div className="bg-[#f7f7f7] rounded-2xl p-4 flex flex-col gap-4">
+      <div className="text-4xl font-semibold">Dashboard</div>
       <div className="grid grid-cols-4 gap-4">
         <Card
           title="Preferred Jar"
@@ -122,17 +122,26 @@ const Dashboard = () => {
           info="Successfully completed"
         />
       </div>
-      <div className="flex justify-between items-center gap-4">
+      <div className="flex justify-between items-center">
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-center gap-4">
-            <SavingsCard />
-            <div className="bg-white rounded-2xl p-6">?</div>
+            <div className="flex-3">
+              <SavingsCard
+                roundups={[
+                  { date: "2026-10-25", count: 3 },
+                  { date: "2026-10-26", count: 5 },
+                  { date: "2026-10-27", count: 2 },
+                  { date: "2026-10-28", count: 4 },
+                ]}
+              />
+            </div>
+            <div className="bg-white rounded-2xl p-6 flex-1">?</div>
           </div>
           <div className="flex justify-between items-center gap-4">
-            <div>
+            <div className="flex-4">
               <RecentTxnsCard />
             </div>
-            <div>
+            <div className="flex-1">
               <JarAllocationCard />
             </div>
           </div>

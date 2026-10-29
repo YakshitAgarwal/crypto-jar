@@ -14,6 +14,7 @@ import Settings from "../components/Menu/Settings";
 import Help from "../components/Menu/Help";
 import Logout from "../components/Menu/Logout";
 import RoundupListener from "../components/RoundupListener";
+import Withdraw from "../components/Menu/Withdraw";
 
 const DashboardPage = () => {
   const [showForm, setShowForm] = useState(false);
@@ -27,33 +28,32 @@ const DashboardPage = () => {
 
     const checkUser = async () => {
       if (!address || !isConnected) {
+        setShowForm(false);
         return;
       }
 
       try {
         const { data } = await axios.get("http://localhost:8000/api/users", {
           params: {
-            address: address?.toLowerCase(),
+            address: address.toLowerCase(),
           },
         });
 
-        if (data.exists) {
-          setShowForm(false);
-        } else {
-          setShowForm(true);
-        }
+        setShowForm(!data.exists);
       } catch (error) {
         console.error("Error checking user:", error);
       }
     };
 
     const getPendingRoundupTransaction = async () => {
+      if (!address || !isConnected) return;
+
       try {
         const { data } = await axios.get(
           "http://localhost:8000/api/transactions/pending",
           {
             params: {
-              address: address?.toLowerCase(),
+              address: address.toLowerCase(),
             },
           },
         );
@@ -75,30 +75,42 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-white text-black">
+    <div className="relative h-screen overflow-hidden bg-white text-black">
       <RoundupListener />
+
+      {/* Main dashboard layout */}
       <div
-        className={`flex min-h-screen gap-4 p-4 ${showForm ? "blur-sm" : ""}`}
+        className={`flex h-full min-h-0 gap-4 overflow-hidden p-4 ${
+          showForm ? "blur-sm" : ""
+        }`}
       >
-        <aside className="w-80 shrink-0 self-stretch">
+        {/* Sidebar */}
+        <aside className="h-full w-80 shrink-0 overflow-hidden">
           <Menubar tab={tab} setTab={setTab} />
         </aside>
-        <main className="flex min-w-0 flex-1 flex-col gap-4">
-          <div className="w-full min-w-0">
+
+        {/* Main content */}
+        <main className="flex min-h-0 min-w-0 flex-1 flex-col gap-4 overflow-hidden">
+          {/* Top bar stays fixed in the layout */}
+          <div className="w-full min-w-0 shrink-0">
             <Searchbar />
           </div>
-          <div className="min-w-0 flex-1">
-            {tab == "Dashboard" && <Dashboard />}
-            {tab == "Jars" && <Jars />}
-            {tab == "Transactions" && <Transactions />}
-            {tab == "Invest" && <Invest />}
-            {tab == "Settings" && <Settings />}
-            {tab == "Help" && <Help />}
-            {tab == "Logout" && <Logout />}
+
+          {/* Selected page gets the remaining available height */}
+          <div className="min-h-0 min-w-0 flex-1 overflow-hidden">
+            {tab === "Dashboard" && <Dashboard />}
+            {tab === "Jars" && <Jars />}
+            {tab === "Transactions" && <Transactions />}
+            {tab === "Invest" && <Invest />}
+            {tab === "Withdraw" && <Withdraw />}
+            {tab === "Settings" && <Settings />}
+            {tab === "Help" && <Help />}
+            {tab === "Logout" && <Logout />}
           </div>
         </main>
       </div>
 
+      {/* Onboarding modal */}
       {showForm && (
         <>
           <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-md" />

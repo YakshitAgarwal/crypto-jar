@@ -14,6 +14,7 @@ import {
   LoaderCircle,
   RefreshCw,
 } from "lucide-react";
+import { normalizeTransfer } from "../../hooks/transactionHistory";
 
 import SummaryCard from "../Transactions/SummaryCard";
 import TransactionRow from "../Transactions/TransactionRow";
@@ -62,8 +63,6 @@ interface HistoryResponse {
   };
 }
 
-const VAULT_ADDRESS = process.env.NEXT_PUBLIC_VAULT_ADDRESS?.toLowerCase();
-
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 
@@ -74,45 +73,6 @@ const tabs: { label: string; value: TabType }[] = [
   { label: "Vault Deposits", value: "VAULT" },
   { label: "Other Transactions", value: "OTHER" },
 ];
-
-function normalizeTransfer(
-  transfer: AlchemyTransfer,
-  walletAddress: string,
-  index: number,
-): Transaction {
-  const wallet = walletAddress.toLowerCase();
-  const from = transfer.from?.toLowerCase() ?? "";
-  const to = transfer.to?.toLowerCase() ?? "";
-
-  const direction: Direction = from === wallet ? "OUT" : "IN";
-  const isVaultDeposit = to === VAULT_ADDRESS;
-
-  const rawValue = Number(transfer.value ?? 0);
-  const amount = Number.isFinite(rawValue) ? rawValue : 0;
-
-  const timestamp = transfer.metadata?.blockTimestamp;
-
-  return {
-    id: `${transfer.hash}-${transfer.uniqueId ?? `${transfer.category ?? "transfer"}-${index}`}`,
-    hash: transfer.hash,
-    type: isVaultDeposit
-      ? "VAULT_DEPOSIT"
-      : direction === "OUT"
-        ? "PAYMENT"
-        : "TRANSFER",
-    amount,
-    token: transfer.asset || "Unknown asset",
-    status: "COMPLETED",
-    date: timestamp || new Date().toISOString(),
-    description: isVaultDeposit
-      ? "Vault deposit"
-      : direction === "OUT"
-        ? `Outgoing ${transfer.category ?? "wallet"} transfer`
-        : `Incoming ${transfer.category ?? "wallet"} transfer`,
-    address: direction === "OUT" ? transfer.to : transfer.from,
-    direction,
-  };
-}
 
 const Transactions = () => {
   const { address } = useConnection();
@@ -223,8 +183,8 @@ const Transactions = () => {
     0,
   );
 
-  const completedCount = transactions.filter(
-    (tx) => tx.status === "COMPLETED",
+  const roundupCount = transactions.filter(
+    (tx) => tx.type === "VAULT_DEPOSIT",
   ).length;
 
   const totalPages = Math.ceil(filteredTransactions.length / PAGE_SIZE);
@@ -281,8 +241,8 @@ const Transactions = () => {
         />
         <SummaryCard
           icon={<Wallet size={17} />}
-          label="Indexed"
-          value={String(completedCount)}
+          label="Roundup transactions"
+          value={String(roundupCount)}
         />
       </div>
 
